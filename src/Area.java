@@ -1,7 +1,14 @@
+import java.util.HashMap;
+import java.util.Map;
+
 public enum Area {
 
     US("US"),
     ASIA("Asia");
+
+    private static class Holder {
+        static Map<String, Area> MAP = new HashMap<>();
+    }
 
     private String areaName;
 
@@ -10,15 +17,17 @@ public enum Area {
     }
 
     Area(String areaName) {
+
         this.areaName = areaName;
+        Holder.MAP.put(areaName, this);
     }
 
     public static Area toArea(String areaName) {
-        for (Area tmp : Area.values()) {
-            if (tmp.getAreaName().equalsIgnoreCase(areaName)) {
-                return tmp;
-            }
+        Area area = Holder.MAP.get(areaName);
+        if (null == area) {
+            throw new IllegalArgumentException(String.format("Unsupported %s code %s.", Area.class.getName(), areaName));
         }
-        return null;
+
+        return area;
     }
 }

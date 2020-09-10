@@ -3,7 +3,14 @@
  */
 public class WeatherData {
 
+
     private Area area;
+    /**
+     * TODO 重要 DisplayType 是一個List
+     *
+     * 讀到Data的當下 只會顯示該Area的資料，但是如果有多種Display Type就要通通顯示
+     *
+     */
     private DisplayType displayType;
     private Double temperature;
     private Double humidity;

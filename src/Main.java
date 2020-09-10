@@ -24,7 +24,7 @@ public class Main {
 
             String[] row = line.split("\\s+");
             //拿row[0]來判斷指令類型
-            // TODO 確認 attach detach切換的規則...
+            // TODO 沒有 attach跟detach切換的問題
             checkCmdType(row);
             line = reader.readLine();
         }
@@ -83,6 +83,7 @@ public class Main {
 
         Area area = Area.toArea(data[1]);
 
+        // TODO 讀DATA時應該也要update area
         weatherData.setTemperature(parseAndRoundDouble(data[2]));
         weatherData.setHumidity(parseAndRoundDouble(data[3]));
         weatherData.setPressure(parseAndRoundDouble(data[4]));

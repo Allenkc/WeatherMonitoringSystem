@@ -70,6 +70,7 @@ public class WeatherData {
                         }
                         break;
                     case FORECAST:
+                        printInForecastMode();
                         break;
                 }
             }
@@ -82,5 +83,15 @@ public class WeatherData {
         System.out.println("Humidity " + this.humidity);
         System.out.println("Pressure " + this.pressure);
 
+    }
+
+    public void printInForecastMode(){
+        if(this.humidity > 0.8){
+            System.out.println("Forecast rain.");
+        }else if(this.humidity < 0.2){
+            System.out.println("Forecast sunny.");
+        }else {
+            System.out.println("Forecast cloudy.");
+        }
     }
 }

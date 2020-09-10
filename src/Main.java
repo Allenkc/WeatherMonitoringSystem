@@ -20,11 +20,11 @@ public class Main {
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
 
         String line = reader.readLine();
-        while (line != null) {
-            String[] row = line.split("\\s+");
-            //TODO 拿 row[0]來判斷指令類型
-            checkCmdType(row);
+        while (line != null && !line.isEmpty()) {
 
+            String[] row = line.split("\\s+");
+            //拿row[0]來判斷指令類型
+            checkCmdType(row);
             line = reader.readLine();
         }
 

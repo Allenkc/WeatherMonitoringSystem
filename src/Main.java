@@ -24,6 +24,7 @@ public class Main {
 
             String[] row = line.split("\\s+");
             //拿row[0]來判斷指令類型
+            // TODO 確認 attach detach切換的規則...
             checkCmdType(row);
             line = reader.readLine();
         }
@@ -44,8 +45,10 @@ public class Main {
             case DATA:
                 //依據內容儲存資料
                 updateWeatherData(row);
-                //隨後進行輸出
-                output();
+                //隨後進行輸出，這邊檢查指令的Area有沒有跟當下weather data的area一樣
+                if(Area.toArea(row[1]).equals(weatherData.getArea())){
+                    output();
+                }
                 break;
             case ATTACH:
                 weatherData.setArea(Area.toArea(row[1]));

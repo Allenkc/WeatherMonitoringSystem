@@ -5,8 +5,13 @@ import java.util.Optional;
 
 public class Main {
 
-    // Only One instance in whole life cycle
+    // TODO 改成 US 跟 Aisa 各一個 weather data obj
     private static WeatherData weatherData = new WeatherData();
+
+    // WIP
+    private static WeatherData usWeatherData = new WeatherData(Area.US);
+    private static WeatherData asiaWeatherData = new WeatherData(Area.ASIA);
+
     private static DataBase asiaDB = new DataBase(Area.ASIA.getAreaName());
     private static DataBase usDB = new DataBase(Area.US.getAreaName());
 
@@ -51,8 +56,7 @@ public class Main {
                 }
                 break;
             case ATTACH:
-                weatherData.setArea(Area.toArea(row[1]));
-                weatherData.setDisplayType(DisplayType.toDisplayType(row[2]));
+                updataDisplayType(row);
                 break;
             case DETACH:
                 Area area = Area.toArea(row[1]);
@@ -82,19 +86,30 @@ public class Main {
     private static void updateWeatherData(String[] data) {
 
         Area area = Area.toArea(data[1]);
-
-        // TODO 讀DATA時應該也要update area
-        weatherData.setTemperature(parseAndRoundDouble(data[2]));
-        weatherData.setHumidity(parseAndRoundDouble(data[3]));
-        weatherData.setPressure(parseAndRoundDouble(data[4]));
-
-        if (area.equals(Area.US)) {
+        if(area.equals(Area.US)){
+            //TODO 更新 us weather data
+            usWeatherData.setTemperature(parseAndRoundDouble(data[2]));
+            usWeatherData.setHumidity(parseAndRoundDouble(data[3]));
+            usWeatherData.setPressure(parseAndRoundDouble(data[4]));
             // 寫 US DB
             usDB.save(weatherData);
-        } else {
+        }else {
+            //TODO 更新 asia weather data
+            asiaWeatherData.setTemperature(parseAndRoundDouble(data[2]));
+            asiaWeatherData.setHumidity(parseAndRoundDouble(data[3]));
+            asiaWeatherData.setPressure(parseAndRoundDouble(data[4]));
             // 寫 ASIA DB
             asiaDB.save(weatherData);
         }
+
+    }
+
+    /**
+     * TODO 抽 更新display type的方法
+     */
+    private static void updataDisplayType(String[] row){
+
+        weatherData.add(DisplayType.toDisplayType(row[2]));
 
     }
 

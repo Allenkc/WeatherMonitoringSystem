@@ -6,7 +6,7 @@ import java.util.Optional;
 public class Main {
 
     // TODO 改成 US 跟 Aisa 各一個 weather data obj
-    private static WeatherData weatherData = new WeatherData();
+    //    private static WeatherData weatherData = new WeatherData();
 
     // WIP
     private static WeatherData usWeatherData = new WeatherData(Area.US);
@@ -28,12 +28,11 @@ public class Main {
         while (line != null && !line.isEmpty()) {
 
             String[] row = line.split("\\s+");
-            //拿row[0]來判斷指令類型
+            // 拿row[0]來判斷指令類型
             // TODO 沒有 attach跟detach切換的問題
             checkCmdType(row);
             line = reader.readLine();
         }
-
     }
 
     /**
@@ -48,11 +47,13 @@ public class Main {
 
         switch (cmdType) {
             case DATA:
-                //依據內容儲存資料
+                // 依據內容儲存資料
                 updateWeatherData(row);
-                //隨後進行輸出，這邊檢查指令的Area有沒有跟當下weather data的area一樣
-                if(Area.toArea(row[1]).equals(weatherData.getArea())){
-                    output();
+                // 隨後進行輸出，這邊檢查指令的Area有沒有跟當下weather data的area一樣
+                if (Area.toArea(row[1]).equals(Area.US)) {
+                    usWeatherData.print(usDB);
+                } else {
+                    asiaWeatherData.print(asiaDB);
                 }
                 break;
             case ATTACH:
@@ -60,22 +61,14 @@ public class Main {
                 break;
             case DETACH:
                 Area area = Area.toArea(row[1]);
-                if (null != weatherData.getArea() && area.equals(weatherData.getArea())) {
-
-                    DisplayType displayType =
-                            DisplayType.toDisplayType(row[2]);
-                    if (null != weatherData.getDisplayType() &&
-                            displayType.equals(weatherData.getDisplayType())) {
-                        weatherData.setArea(null);
-                        weatherData.setDisplayType(null);
-                    }
-
+                if (area.equals(Area.US)) {
+                    // 按照格式display type在row[2]
+                    usWeatherData.detach(DisplayType.toDisplayType(row[2]));
+                } else {
+                    asiaWeatherData.detach(DisplayType.toDisplayType(row[2]));
                 }
-
                 break;
-
         }
-
     }
 
     /**
@@ -86,45 +79,43 @@ public class Main {
     private static void updateWeatherData(String[] data) {
 
         Area area = Area.toArea(data[1]);
-        if(area.equals(Area.US)){
-            //TODO 更新 us weather data
+        if (area.equals(Area.US)) {
+            // TODO 更新 us weather data
             usWeatherData.setTemperature(parseAndRoundDouble(data[2]));
             usWeatherData.setHumidity(parseAndRoundDouble(data[3]));
             usWeatherData.setPressure(parseAndRoundDouble(data[4]));
             // 寫 US DB
-            usDB.save(weatherData);
-        }else {
-            //TODO 更新 asia weather data
+            usDB.save(usWeatherData);
+        } else {
+            // TODO 更新 asia weather data
             asiaWeatherData.setTemperature(parseAndRoundDouble(data[2]));
             asiaWeatherData.setHumidity(parseAndRoundDouble(data[3]));
             asiaWeatherData.setPressure(parseAndRoundDouble(data[4]));
             // 寫 ASIA DB
-            asiaDB.save(weatherData);
-        }
-
-    }
-
-    /**
-     * TODO 抽 更新display type的方法
-     */
-    private static void updataDisplayType(String[] row){
-
-        weatherData.add(DisplayType.toDisplayType(row[2]));
-
-    }
-
-    /**
-     * 收到DATA指令的當下要去進行最終輸出
-     */
-    private static void output() {
-        if (null != weatherData.getArea()) {
-            if (Area.US.equals(weatherData.getArea())) {
-                weatherData.print(usDB);
-            } else {
-                weatherData.print(asiaDB);
-            }
+            asiaDB.save(asiaWeatherData);
         }
     }
+
+    /** TODO 抽 更新display type的方法 */
+    private static void updataDisplayType(String[] row) {
+
+        if (Area.toArea(row[1]).equals(Area.US)) {
+            usWeatherData.add(DisplayType.toDisplayType(row[2]));
+        } else {
+            asiaWeatherData.add(DisplayType.toDisplayType(row[2]));
+        }
+    }
+    //
+    //    /** 收到DATA指令的當下要去進行最終輸出 */
+    //    private static void output() {
+    //        if (null != weatherData.getArea()) {
+    //            if (Area.US.equals(weatherData.getArea())) {
+    //                weatherData.print(usDB);
+    //            } else {
+    //                weatherData.print(asiaDB);
+    //            }
+    //        }
+    //    }
 
     /**
      * parse str to double

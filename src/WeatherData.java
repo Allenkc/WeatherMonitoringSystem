@@ -87,11 +87,8 @@ public class WeatherData {
 
     public void detach(DisplayType displayType) {
 
-        /**
-         * https://stackoverflow.com/questions/35701337/java-8-lambda-get-and-remove-element-from-list
-         */
         // 找到對應的displayType然後remove
-        this.displayTypeList.removeIf(displayType1 -> displayType.equals(displayType1));
+        this.displayTypeList.removeIf(displayType::equals);
     }
 
     /** 確認當下 Area 跟 模式 然後列印 如果沒有被attach任何 displayType 就不列印 */
